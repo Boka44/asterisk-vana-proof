@@ -1,0 +1,19 @@
+{
+  "dlp_id": 1234,
+  "valid": true,
+  "score": 0.9600000000000001,
+  "authenticity": 0.8,
+  "ownership": 1.0,
+  "quality": 1.0,
+  "uniqueness": 1.0,
+  "attributes": {
+    "data_type": "daily_checkin",
+    "checkin_completeness": 1.0,
+    "has_health_comment": true,
+    "has_anxiety_details": true,
+    "has_pain_details": true,
+    "has_fatigue_details": true,
+    "has_profile_update": false
+  },
+  "metadata": {}
+}
