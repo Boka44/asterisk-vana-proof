@@ -39,6 +39,8 @@ class Proof:
                 data = json.load(f)
                 logging.info(f"Processing file {input_filename}")
 
+                logging.info(f"Data: {data}")
+
                 # Check for health profile
                 if 'healthDataId' in data:
                     return self._process_health_profile(data)
