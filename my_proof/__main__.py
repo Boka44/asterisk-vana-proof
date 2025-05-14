@@ -16,9 +16,8 @@ logging.basicConfig(level=logging.INFO, format='%(message)s')
 def load_config() -> Dict[str, Any]:
     """Load proof configuration from environment variables."""
     config = {
-        'dlp_id': 1234,  # Set your own DLP ID here
-        'input_dir': INPUT_DIR,
-        'user_email': os.environ.get('USER_EMAIL', None),
+        'dlp_id': 50,  # Set your own DLP ID here
+        'input_dir': INPUT_DIR
     }
     logging.info(f"Using config: {json.dumps(config, indent=2)}")
     return config
@@ -47,6 +46,8 @@ def extract_input() -> None:
     If the input directory contains any zip files, extract them
     :return:
     """
+
+    logging.info(f"Extracting input files from {INPUT_DIR} due to ZIP files")
     for input_filename in os.listdir(INPUT_DIR):
         input_file = os.path.join(INPUT_DIR, input_filename)
 

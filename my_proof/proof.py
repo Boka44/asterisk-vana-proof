@@ -43,6 +43,7 @@ class Proof:
                         
                         # Process each file in the ZIP
                         for extracted_file in os.listdir(temp_dir):
+                            logging.info(f"Processing extracted file {extracted_file}")
                             if extracted_file.lower().endswith('.json'):
                                 file_path = os.path.join(temp_dir, extracted_file)
                                 with open(file_path, 'r') as f:
