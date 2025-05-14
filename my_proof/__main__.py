@@ -52,33 +52,31 @@ def extract_input() -> None:
     logging.info(f"Extracting input files from {INPUT_DIR} due to ZIP files")
     for input_filename in os.listdir(INPUT_DIR):
         input_file = os.path.join(INPUT_DIR, input_filename)
+        new_filename = input_filename
 
-        # Check file size and first few bytes
-        file_size = os.path.getsize(input_file)
-        with open(input_file, 'rb') as f:
-            first_bytes = f.read(4).hex()
-        
-        logging.info(f"File {input_filename}: size={file_size} bytes, first_bytes={first_bytes}")
-        
-        # Try both methods to detect ZIP files
-        is_zip = input_filename.lower().endswith('.zip') or zipfile.is_zipfile(input_file)
-        
-        logging.info(f"Checking if {input_filename} is a zip file (is_zip={is_zip})")
+        # Check if file is actually JSON despite the extension
         try:
-            with zipfile.ZipFile(input_file, 'r') as zip_ref:
-                file_list = zip_ref.namelist()
-                logging.info(f"ZIP contents: {file_list}")
-                zip_ref.extractall(INPUT_DIR)
-            logging.info(f"Extracted {input_filename}")
-        except zipfile.BadZipFile as e:
-            logging.error(f"Failed to extract {input_filename} - not a valid ZIP file: {str(e)}")
-            # Try to read file as text to see if it's encoded
+            with open(input_file, 'r') as f:
+                json.load(f)  # Try to parse as JSON
+                if input_filename.lower().endswith('.zip'):
+                    # It's a JSON file with wrong extension, rename it
+                    new_filename = input_filename[:-4] + '.json'
+                    new_path = os.path.join(INPUT_DIR, new_filename)
+                    os.rename(input_file, new_path)
+                    logging.info(f"Renamed {input_filename} to {new_filename} as it contains JSON data")
+                continue
+        except json.JSONDecodeError:
+            pass  # Not JSON, continue with ZIP check
+        
+        # Handle actual ZIP files
+        if zipfile.is_zipfile(input_file):
+            logging.info(f"Extracting ZIP file {input_filename}")
             try:
-                with open(input_file, 'r') as f:
-                    start = f.read(100)  # Read first 100 chars
-                logging.info(f"File starts with: {start}")
-            except UnicodeDecodeError:
-                logging.info("File appears to be binary but not a valid ZIP")
+                with zipfile.ZipFile(input_file, 'r') as zip_ref:
+                    zip_ref.extractall(INPUT_DIR)
+                logging.info(f"Extracted {input_filename}")
+            except zipfile.BadZipFile as e:
+                logging.error(f"Failed to extract {input_filename}: {str(e)}")
 
 
 if __name__ == "__main__":
