@@ -53,12 +53,18 @@ def extract_input() -> None:
     for input_filename in os.listdir(INPUT_DIR):
         input_file = os.path.join(INPUT_DIR, input_filename)
 
-        logging.info(f"Checking if {input_filename} is a zip file")
-        if zipfile.is_zipfile(input_file):
+        # Try both methods to detect ZIP files
+        is_zip = input_filename.lower().endswith('.zip') or zipfile.is_zipfile(input_file)
+        
+        logging.info(f"Checking if {input_filename} is a zip file (is_zip={is_zip})")
+        if is_zip:
             logging.info(f"Extracting {input_filename}")
-            with zipfile.ZipFile(input_file, 'r') as zip_ref:
-                zip_ref.extractall(INPUT_DIR)
-            logging.info(f"Extracted {input_filename}")
+            try:
+                with zipfile.ZipFile(input_file, 'r') as zip_ref:
+                    zip_ref.extractall(INPUT_DIR)
+                logging.info(f"Extracted {input_filename}")
+            except zipfile.BadZipFile:
+                logging.error(f"Failed to extract {input_filename} - not a valid ZIP file")
 
 
 if __name__ == "__main__":
