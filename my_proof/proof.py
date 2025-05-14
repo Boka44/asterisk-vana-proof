@@ -30,8 +30,8 @@ class Proof:
 
         for input_filename in input_files:
             input_file = os.path.join(self.config['input_dir'], input_filename)
-            if not input_file.lower().endswith('.json'):
-                continue
+            # if not input_file.lower().endswith('.json'):
+            #     continue
 
             with open(input_file, 'r') as f:
                 data = json.load(f)
