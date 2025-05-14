@@ -53,18 +53,32 @@ def extract_input() -> None:
     for input_filename in os.listdir(INPUT_DIR):
         input_file = os.path.join(INPUT_DIR, input_filename)
 
+        # Check file size and first few bytes
+        file_size = os.path.getsize(input_file)
+        with open(input_file, 'rb') as f:
+            first_bytes = f.read(4).hex()
+        
+        logging.info(f"File {input_filename}: size={file_size} bytes, first_bytes={first_bytes}")
+        
         # Try both methods to detect ZIP files
         is_zip = input_filename.lower().endswith('.zip') or zipfile.is_zipfile(input_file)
         
         logging.info(f"Checking if {input_filename} is a zip file (is_zip={is_zip})")
-        # if is_zip:
-        logging.info(f"Extracting {input_filename}")
         try:
             with zipfile.ZipFile(input_file, 'r') as zip_ref:
+                file_list = zip_ref.namelist()
+                logging.info(f"ZIP contents: {file_list}")
                 zip_ref.extractall(INPUT_DIR)
             logging.info(f"Extracted {input_filename}")
-        except zipfile.BadZipFile:
-            logging.error(f"Failed to extract {input_filename} - not a valid ZIP file")
+        except zipfile.BadZipFile as e:
+            logging.error(f"Failed to extract {input_filename} - not a valid ZIP file: {str(e)}")
+            # Try to read file as text to see if it's encoded
+            try:
+                with open(input_file, 'r') as f:
+                    start = f.read(100)  # Read first 100 chars
+                logging.info(f"File starts with: {start}")
+            except UnicodeDecodeError:
+                logging.info("File appears to be binary but not a valid ZIP")
 
 
 if __name__ == "__main__":
