@@ -30,53 +30,21 @@ class Proof:
 
         for input_filename in input_files:
             input_file = os.path.join(self.config['input_dir'], input_filename)
-            
-            # Handle ZIP files
-            if input_filename.lower().endswith('.zip'):
-                import zipfile
-                try:
-                    with zipfile.ZipFile(input_file, 'r') as zip_ref:
-                        # Extract all files to a temporary directory
-                        temp_dir = os.path.join(self.config['input_dir'], 'temp_extracted')
-                        os.makedirs(temp_dir, exist_ok=True)
-                        zip_ref.extractall(temp_dir)
-                        
-                        # Process each file in the ZIP
-                        for extracted_file in os.listdir(temp_dir):
-                            logging.info(f"Processing extracted file {extracted_file}")
-                            if extracted_file.lower().endswith('.json'):
-                                file_path = os.path.join(temp_dir, extracted_file)
-                                with open(file_path, 'r') as f:
-                                    data = json.load(f)
-                                    logging.info(f"Processing extracted file {extracted_file}")
-                                    
-                                    # Check for health profile
-                                    if 'healthDataId' in data:
-                                        return self._process_health_profile(data)
-                                    # Check for check-in
-                                    elif 'mood' in data:
-                                        return self._process_daily_checkin(data)
-                        
-                        # Clean up temporary directory
-                        import shutil
-                        shutil.rmtree(temp_dir)
-                
-                except zipfile.BadZipFile:
-                    logging.error(f"Failed to process zip file {input_filename}")
-                    continue
-            
-            # Handle direct JSON files
-            elif input_filename.lower().endswith('.json'):
-                with open(input_file, 'r') as f:
-                    data = json.load(f)
-                    logging.info(f"Processing file {input_filename}")
+            logging.info(f"Checking if {input_filename} is a JSON file")
+            if not input_file.lower().endswith('.json'):
+                logging.info(f"Skipping {input_filename} because it's not a JSON file")
+                continue
 
-                    # Check for health profile
-                    if 'healthDataId' in data:
-                        return self._process_health_profile(data)
-                    # Check for check-in
-                    elif 'mood' in data:
-                        return self._process_daily_checkin(data)
+            with open(input_file, 'r') as f:
+                data = json.load(f)
+                logging.info(f"Processing file {input_filename}")
+
+                # Check for health profile
+                if 'healthDataId' in data:
+                    return self._process_health_profile(data)
+                # Check for check-in
+                elif 'mood' in data:
+                    return self._process_daily_checkin(data)
 
         logging.error("No valid health profile or check-in data found")
         self.proof_response.valid = False

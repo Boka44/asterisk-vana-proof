@@ -25,12 +25,14 @@ def load_config() -> Dict[str, Any]:
 
 def run() -> None:
     """Generate proofs for all input files."""
+    logging.info(f"Running proof generation")
     config = load_config()
     input_files_exist = os.path.isdir(INPUT_DIR) and bool(os.listdir(INPUT_DIR))
 
     if not input_files_exist:
         raise FileNotFoundError(f"No input files found in {INPUT_DIR}")
     extract_input()
+
 
     proof = Proof(config)
     proof_response = proof.generate()
@@ -51,9 +53,12 @@ def extract_input() -> None:
     for input_filename in os.listdir(INPUT_DIR):
         input_file = os.path.join(INPUT_DIR, input_filename)
 
+        logging.info(f"Checking if {input_filename} is a zip file")
         if zipfile.is_zipfile(input_file):
+            logging.info(f"Extracting {input_filename}")
             with zipfile.ZipFile(input_file, 'r') as zip_ref:
                 zip_ref.extractall(INPUT_DIR)
+            logging.info(f"Extracted {input_filename}")
 
 
 if __name__ == "__main__":
