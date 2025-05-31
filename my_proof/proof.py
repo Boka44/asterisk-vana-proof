@@ -42,7 +42,7 @@ class Proof:
                 logging.info(f"Data: {data}")
 
                 # Check for health profile
-                if 'healthDataId' in data:
+                if 'conditions' in data:
                     return self._process_health_profile(data)
                 # Check for check-in
                 elif 'mood' in data:
