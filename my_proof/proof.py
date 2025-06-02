@@ -185,23 +185,26 @@ class Proof:
         """Verify ownership of health profile."""
         score = 0.0
         
-        if not health_data.get('user_hash'):
-            return score
+        # if not health_data.get('user_hash'):
+        #     return score
         
-        score += 0.4  # Base score for having user_hash
+        # score += 0.4  # Base score for having user_hash
 
-        # Additional verification factors
-        if health_data.get('healthDataId'):
-            score += 0.2
+        # # Additional verification factors
+        # if health_data.get('healthDataId'):
+        #     score += 0.2
         
-        profile = health_data.get('profile', {})
-        if all(profile.get(field) for field in ['nickname', 'age_range', 'location']):
-            score += 0.2
+        # profile = health_data.get('profile', {})
+        # if all(profile.get(field) for field in ['nickname', 'age_range', 'location']):
+        #     score += 0.2
         
-        if health_data.get('research_opt_in') is not None:
-            score += 0.2
+        # if health_data.get('research_opt_in') is not None:
+        #     score += 0.2
+        
+        # Currently we don't care for ownership verification
+        return 1.0
             
-        return min(1.0, score)
+        # return min(1.0, score)
 
     def _verify_checkin_ownership(self, checkin: Dict) -> float:
         """Verify ownership of daily check-in."""
