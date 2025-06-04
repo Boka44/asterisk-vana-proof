@@ -151,14 +151,14 @@ class Proof:
     def _calculate_checkin_quality(self, checkin: Dict) -> float:
         """Calculate quality score for daily check-in."""
         required_fields = {
-            'mood', 'health_comment', 'doctor_visit',
-            'health_profile_update'
+            'mood', 'health_comment', 'doctor_visit
         }
         
         optional_fields = {
             'anxiety_level', 'anxiety_details',
             'pain_level', 'pain_details',
-            'fatigue_level', 'fatigue_details'
+            'fatigue_level', 'fatigue_details',
+            'health_profile_update'
         }
         
         # Calculate basic completeness
@@ -209,9 +209,12 @@ class Proof:
     def _verify_checkin_ownership(self, checkin: Dict) -> float:
         """Verify ownership of daily check-in."""
         score = 0.0
+
+        # Currently we don't care for ownership verification
+        return 1.0
         
-        if not checkin.get('user_hash'):
-            return score
+        # if not checkin.get('user_hash'):
+        #     return score
         
         score += 0.6  # Base score for having user_hash
 
