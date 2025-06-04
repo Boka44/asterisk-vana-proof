@@ -73,7 +73,7 @@ class Proof:
 
         # Determine validity
         self.proof_response.valid = (
-            self.proof_response.ownership >= 0.8 and
+            # self.proof_response.ownership >= 0.8 and
             self.proof_response.quality >= 0.5
         )
 
@@ -110,7 +110,7 @@ class Proof:
 
         # Determine validity
         self.proof_response.valid = (
-            self.proof_response.ownership >= 0.8 and
+            # self.proof_response.ownership >= 0.8 and
             self.proof_response.quality >= 0.5
         )
 
@@ -151,7 +151,7 @@ class Proof:
     def _calculate_checkin_quality(self, checkin: Dict) -> float:
         """Calculate quality score for daily check-in."""
         required_fields = {
-            'mood', 'health_comment', 'doctor_visit
+            'mood', 'health_comment', 'doctor_visit'
         }
         
         optional_fields = {
